@@ -19,8 +19,8 @@ const LoginForm: React.FC = () => {
 
   const formik = useFormik({
     initialValues: {
-      username: 'kminchelle', // DummyJSON test user
-      password: '0lelplR',    // DummyJSON test user password
+      username: 'emilys',        // DummyJSON test user
+      password: 'emilyspass',    // DummyJSON test user password
     },
     validationSchema: LoginSchema,
     onSubmit: async (values: { username: string; password: string; }) => {
