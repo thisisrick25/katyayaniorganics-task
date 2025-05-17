@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { setCredentials, logout } from '~/features/auth/authSlice';
-import type { RootState } from '~/store';
+import { setCredentials, logout } from '~/features/auth/authSlice'; // Actions from authSlice
+import type { RootState } from '~/store'; // Type for the Redux root state
 
-// Define the expected login response structure from dummyjson
+// Define the expected structure of the login API response from dummyjson
 interface LoginResponse {
   id: number;
   username: string;
@@ -15,75 +15,87 @@ interface LoginResponse {
   refreshToken: string; // This is the refresh token
 }
 
- // Define the User structure for getAuthUser
- interface AuthUserResponse {
-     id: number;
-     username: string;
-     email: string;
-     firstName: string;
-     lastName: string;
-     gender: string;
-     image: string;
-     // ... any other fields from /auth/me
- }
+// Define the structure for the response of fetching the authenticated user (/auth/me)
+interface AuthUserResponse {
+  id: number;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  image: string;
+  // ... any other fields from /auth/me
+}
 
-
+// Base query function for API requests, configured with the base URL
 const baseQuery = fetchBaseQuery({
   baseUrl: 'https://dummyjson.com',
+  // prepareHeaders is called before each request, allowing modification of headers
   prepareHeaders: (headers, { getState }) => {
+    // Get the access token from the Redux state
     const token = (getState() as RootState).auth.accessToken;
     if (token) {
+      // If a token exists, add it to the Authorization header
       headers.set('authorization', `Bearer ${token}`);
     }
     return headers;
   },
 });
 
-// Basic reauth example: if 401, logout.
-// A full reauth would try to use the refresh token.
+// Wrapper around baseQuery to handle re-authentication or logout on 401 errors
 const baseQueryWithReauth: typeof baseQuery = async (args, api, extraOptions) => {
-  let result = await baseQuery(args, api, extraOptions);
+  let result = await baseQuery(args, api, extraOptions); // Make the initial request
+
+  // Check if the request resulted in a 401 (Unauthorized) error
   if (result.error && result.error.status === 401) {
-    console.warn('Received 401 Unauthorized, logging out.');
-    api.dispatch(logout());
-    // Optionally, you could try to refresh the token here if the API supports it
-    // and the original request was not for login/refresh itself.
-    // For dummyjson, /auth/refresh exists but this example keeps it simple.
+    console.warn('Received 401 Unauthorized, attempting to handle or logging out.');
+    // Here, a more robust implementation would:
+    // 1. Try to use the refreshToken to get a new accessToken.
+    // 2. If successful, update tokens in store and retry the original request.
+    // 3. If refresh fails, then dispatch logout.
+    // For this example, we directly dispatch logout for simplicity.
+    api.dispatch(logout()); // Dispatch the logout action from authSlice
   }
-  return result;
+  return result; // Return the result of the request (or the error)
 };
 
+// Create an RTK Query API slice for authentication-related endpoints
 export const authApi = createApi({
-  reducerPath: 'authApi',
-  baseQuery: baseQueryWithReauth, // Use the reauth-aware base query
+  reducerPath: 'authApi', // Unique key for the reducer in the store
+  baseQuery: baseQueryWithReauth, // Use the custom baseQuery with re-auth/logout logic
   endpoints: (builder) => ({
+    // Define the 'login' mutation endpoint
     login: builder.mutation<LoginResponse, { username: string; password: string }>({
-      query: (credentials) => ({
-        url: '/auth/login',
-        method: 'POST',
-        body: credentials,
+      query: (credentials) => ({ // `query` defines how to make the request
+        url: '/auth/login',      // API endpoint path
+        method: 'POST',          // HTTP method
+        body: credentials,       // Request body (username and password)
       }),
+      // `onQueryStarted` is a lifecycle hook executed when the query/mutation starts
       onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
         try {
-          const { data } = await queryFulfilled;
-          // Extract user data from the response, excluding tokens
+          const { data } = await queryFulfilled; // Wait for the query to complete successfully
+          // Extract user data and tokens from the response
           const { token, refreshToken, ...userData } = data;
+          // Dispatch `setCredentials` to update auth state and store tokens
           dispatch(setCredentials({ user: userData, accessToken: token, refreshToken }));
         } catch (error) {
-          // Error handling can be done in the component via the mutation's error state
-          console.error('Login query failed:', error);
+          // Errors are typically handled by the component using the mutation hook (e.g., `isError`, `error` properties)
+          console.error('Login query failed inside onQueryStarted:', error);
         }
       },
     }),
+    // Define the 'getAuthUser' query endpoint (e.g., for fetching current user details)
     getAuthUser: builder.query<AuthUserResponse, void>({
-      query: () => '/auth/me',
+      query: () => '/auth/me', // API endpoint for fetching authenticated user data
     }),
-    // Placeholder for refresh token - dummyjson /auth/refresh
+    // Placeholder for refresh token functionality.
+    // DummyJSON's /auth/refresh endpoint expects the refreshToken in the body.
     // refreshToken: builder.mutation<LoginResponse, { refreshToken: string }>({
     //   query: ({ refreshToken }) => ({
     //     url: '/auth/refresh',
     //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' }, // Important for dummyjson refresh
+    //     headers: { 'Content-Type': 'application/json' },
     //     body: { refreshToken, expiresInMins: 30 }, // expiresInMins is optional for dummyjson
     //   }),
     //   onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
@@ -93,11 +105,12 @@ export const authApi = createApi({
     //       dispatch(setCredentials({ user: userData, accessToken: token, refreshToken }));
     //     } catch (error) {
     //       console.error('Token refresh failed:', error);
-    //       dispatch(logout());
+    //       dispatch(logout()); // Logout if refresh fails
     //     }
     //   },
     // }),
   }),
 });
 
+// Export auto-generated hooks for use in components
 export const { useLoginMutation, useGetAuthUserQuery /*, useRefreshTokenMutation */ } = authApi;
