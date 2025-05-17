@@ -38,6 +38,9 @@ const authSlice = createSlice({
       state,
       action: PayloadAction<{ user: User; accessToken: string; refreshToken: string } | null> // Payload can be user data or null for logout
     ) => {
+      console.log('[authSlice] setCredentials reducer CALLED. Current state:', JSON.parse(JSON.stringify(state))); // Log current state (deep copy for clarity)
+      console.log('[authSlice] setCredentials PAYLOAD:', action.payload);
+
       if (action.payload) {
         // If payload exists, update state with user data and tokens
         state.user = action.payload.user;
@@ -49,6 +52,7 @@ const authSlice = createSlice({
           localStorage.setItem('accessToken', action.payload.accessToken);
           localStorage.setItem('refreshToken', action.payload.refreshToken);
         }
+        console.log('[authSlice] setCredentials reducer - NEW state after payload:', JSON.parse(JSON.stringify(state)));
       } else {
         // If payload is null (e.g., from a failed refresh), clear credentials
         state.user = null;
@@ -59,6 +63,7 @@ const authSlice = createSlice({
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
         }
+        console.log('[authSlice] setCredentials reducer - NEW state after NULL payload (logout logic):', JSON.parse(JSON.stringify(state)));
       }
     },
     // Action to log out the user
