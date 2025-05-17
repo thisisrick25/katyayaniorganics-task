@@ -19,9 +19,9 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
      if (storedTheme) {
          setTheme(storedTheme);
      } else {
-         // Optional: Check system preference if no theme is stored
-         // const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-         // setTheme(prefersDark ? 'dark' : 'light');
+         // Check system preference if no theme is stored
+         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+         setTheme(prefersDark ? 'dark' : 'light');
      }
   }, []);
 
