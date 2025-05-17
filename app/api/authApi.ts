@@ -11,7 +11,7 @@ interface LoginResponse {
   lastName: string;
   gender: string;
   image: string;
-  token: string;        // This is the access token
+  accessToken: string;        // This is the access token
   refreshToken: string; // This is the refresh token
 }
 
@@ -73,15 +73,19 @@ export const authApi = createApi({
       }),
       // `onQueryStarted` is a lifecycle hook executed when the query/mutation starts
       onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+        console.log('[authApi] Login onQueryStarted triggered for:', arg.username);
         try {
-          const { data } = await queryFulfilled; // Wait for the query to complete successfully
-          // Extract user data and tokens from the response
-          const { token, refreshToken, ...userData } = data;
-          // Dispatch `setCredentials` to update auth state and store tokens
-          dispatch(setCredentials({ user: userData, accessToken: token, refreshToken }));
+          const { data } = await queryFulfilled;
+          const { accessToken, refreshToken, ...userData } = data;
+          console.log('[authApi] Login successful, dispatching setCredentials with user:', userData.username);
+          console.log('[authApi] Login successful. API Response Data:', data);
+          console.log('[authApi] Destructured for dispatch:');
+          console.log('[authApi]   User Data:', userData);
+          console.log('[authApi]   Access Token (from API `token` field):', accessToken); // This should be the actual access token
+          console.log('[authApi]   Refresh Token (from API `refreshToken` field):', refreshToken);
+          dispatch(setCredentials({ user: userData, accessToken: accessToken, refreshToken: refreshToken })); // Dispatch setCredentials action with user data and tokens
         } catch (error) {
-          // Errors are typically handled by the component using the mutation hook (e.g., `isError`, `error` properties)
-          console.error('Login query failed inside onQueryStarted:', error);
+          console.error('[authApi] Login query failed inside onQueryStarted:', error);
         }
       },
     }),
