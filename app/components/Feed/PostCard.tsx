@@ -12,7 +12,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">{post.body.substring(0, 200)}{post.body.length > 200 && '...'}</p>
       <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-3">
         <span>User ID: {post.userId}</span>
-        <span>Reactions: {post.reactions}</span>
+        <span>
+          Reactions: 👍 {post.reactions.likes} | 👎 {post.reactions.dislikes}
+        </span>
       </div>
       {post.tags && post.tags.length > 0 && (
          <div className="mt-3 flex flex-wrap gap-2">
