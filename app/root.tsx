@@ -13,6 +13,7 @@ import { ThemeProvider } from "~/context/ThemeContext";
 import { hydrateAuthState } from '~/features/auth/authSlice';
 import { Provider as ReduxProvider } from 'react-redux';
 import { store } from '~/store'; // Assuming store.ts is in app/
+import { useEffect } from "react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -27,10 +28,22 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+// Client-side effect to hydrate auth state
+function AuthHydrator() {
+  useEffect(() => {
+    // Ensure this only runs on the client
+    if (typeof window !== 'undefined') {
+      store.dispatch(hydrateAuthState());
+    }
+  }, []);
+  return null; // This component doesn't render anything
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <ReduxProvider store={store}>
       <ThemeProvider>
+        <AuthHydrator /> {/* Hydrate auth state on client */}
         <html lang="en">
           <head>
             <meta charSet="utf-8" />
