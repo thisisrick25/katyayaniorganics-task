@@ -1,87 +1,79 @@
-# Welcome to React Router!
+# React Task Application
 
-A modern, production-ready template for building full-stack React applications using React Router.
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+This is a single-page application built with React, demonstrating skills in front-end architecture, authentication, state management, and real-time communication.
 
 ## Features
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+* **Framework & Styling:**
+  * React with React Router v7 (file-system based routing via `@react-router/dev`).
+    * Tailwind CSS for UI styling and layout, including dark mode.
+* **Authentication:**
+  * Token-based authentication (access & refresh tokens) using [DummyJSON Auth API](https://dummyjson.com/docs/auth).
+    * Session persistence via `localStorage`.
+    * Form validation on the login page.
+    * API integration via RTK Query.
+* **Theming:**
+  * Light/dark theme toggle implemented with React Context API, persisted in `localStorage`.
+* **Routing & Navigation:**
+  * Login page as the entry point.
+    * Redirection to Home page upon successful login.
+    * Protected routes for authenticated users.
+* **Home Page Layout:**
+  * Top navigation bar displaying the authenticated user's name and profile image.
+    * Main feed area with posts from DummyJSON API.
+    * Infinite scroll for the feed.
+* **Chat Feature (WebSocket):**
+  * Floating "Chat" button.
+    * Slide-in chat sidebar using `wss://echo.websocket.org/.ws`.
+    * User messages on the right, echoed server responses on the left.
+    * WebSocket message state managed using RTK Query.
+* **General:**
+  * Loading and error states displayed throughout the application.
 
 ## Getting Started
 
-### Installation
+### Prerequisites
 
-Install the dependencies:
+* Node.js (v18.x or v20.x recommended)
+* npm (or yarn)
 
-```bash
-npm install
-```
+### Installation & Running Locally
 
-### Development
+1. **Clone the repository (if applicable):**
 
-Start the development server with HMR:
+    ```bash
+    git clone https://github.com/thisisrick25/katyayaniorganics-task
+    cd katyayaniorganics-task
+    ```
 
-```bash
-npm run dev
-```
+2. **Install dependencies:**
 
-Your application will be available at `http://localhost:5173`.
+    ```bash
+    npm install
+    # or
+    # yarn install
+    ```
 
-## Building for Production
+3. **Run the development server:**
+    The project uses Vite and `@react-router/dev` which provides a development server with Hot Module Replacement (HMR).
 
-Create a production build:
+    ```bash
+    npm run dev
+    ```
+
+    The application will typically be available at `http://localhost:5173` (the port might vary if 5173 is in use; check the terminal output).
+
+4. **Test Credentials:**
+    You can use the following pre-filled credentials on the Login page (from DummyJSON):
+    * Username: `emilys`
+    * Password: `emilyspass`
+
+### Building for Production
+
+To create an optimized production build:
 
 ```bash
 npm run build
 ```
 
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+The build output will be in the build/ directory, separated into client/ and server/ (for SSR).
