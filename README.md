@@ -6,7 +6,15 @@ For file by file documentation, refer to this [explanation](./exp.md).
 
 ## Tech Stack
 
-React, Redux Toolkit, RTK Query, React Router v7, Tailwind CSS, Formik, Yup, WebSocket.
+* **Framework & Routing:** React, React Router v7
+
+* **State Management & Data Fetching:** Redux Toolkit, RTK Query
+
+* **Styling:** Tailwind CSS v4
+
+* **Form Handling & Validation:** Formik, Yup
+
+* **Real-time Communication:** WebSocket
 
 ## Features
 
