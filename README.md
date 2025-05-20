@@ -1,4 +1,4 @@
-# React Task Application
+# react-rtk-auth-chat-feed
 
 This is a single-page application built with React, demonstrating skills in front-end architecture, authentication, state management, and real-time communication.
 
