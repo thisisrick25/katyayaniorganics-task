@@ -2,6 +2,8 @@
 
 This is a single-page application built with React, demonstrating skills in front-end architecture, authentication, state management, and real-time communication.
 
+For file by file documentation, refer to this [explanation](./exp.md).
+
 ## Features
 
 * **Framework & Styling:**
