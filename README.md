@@ -4,6 +4,10 @@ This is a single-page application built with React, demonstrating skills in fron
 
 For file by file documentation, refer to this [explanation](./exp.md).
 
+## Tech Stack
+
+React, Redux Toolkit, RTK Query, React Router v7, Tailwind CSS, Formik, Yup, WebSocket.
+
 ## Features
 
 * **Framework & Styling:**
