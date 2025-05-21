@@ -1,5 +1,7 @@
 # react-rtk-auth-chat-feed
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fthisisrick25%2Freact-rtk-auth-chat-feed)
+
 This is a single-page application built with React, demonstrating skills in front-end architecture, authentication, state management, and real-time communication.
 
 For file by file documentation, refer to this [explanation](./exp.md).
